@@ -1,0 +1,88 @@
+[gd_scene load_steps=4 format=3 uid="uid://d23dfniwl0h14"]
+
+[ext_resource type="Script" path="res://addons/Node-16 Framework/Framework Menu/FrameworkMenu.gd" id="1_50k8h"]
+[ext_resource type="PackedScene" uid="uid://cdjgxocf45qfx" path="res://addons/Node-16 Framework/Framework Menu/Info/Info.tscn" id="2_u7pb6"]
+[ext_resource type="PackedScene" uid="uid://bw76mt5qqsvhj" path="res://addons/Node-16 Framework/Framework Menu/Settings/Settings.tscn" id="3_j8lbk"]
+
+[node name="Framework" type="Control"]
+clip_contents = true
+custom_minimum_size = Vector2(640, 480)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_50k8h")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="Toolbar" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="TabBar" type="TabBar" parent="MarginContainer/VBoxContainer/Toolbar"]
+layout_mode = 2
+clip_tabs = false
+tab_count = 3
+tab_0/title = "Info"
+tab_1/title = "Docs"
+tab_2/title = "Settings"
+
+[node name="Spacer" type="Control" parent="MarginContainer/VBoxContainer/Toolbar"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/Toolbar"]
+visible = false
+modulate = Color(1, 1, 1, 0.490196)
+layout_mode = 2
+text = "v0.0.1 pre-alpha"
+
+[node name="CheckButton" type="CheckButton" parent="MarginContainer/VBoxContainer/Toolbar"]
+layout_mode = 2
+text = "Disable Network Connectivity"
+
+[node name="Info" type="Control" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Info" parent="MarginContainer/VBoxContainer/Info" instance=ExtResource("2_u7pb6")]
+layout_mode = 1
+
+[node name="Docs" type="Control" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Button" type="Button" parent="MarginContainer/VBoxContainer/Docs"]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+text = "Docs Test"
+
+[node name="Settings" type="Control" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Settings" parent="MarginContainer/VBoxContainer/Settings" instance=ExtResource("3_j8lbk")]
+layout_mode = 1
+
+[connection signal="tab_changed" from="MarginContainer/VBoxContainer/Toolbar/TabBar" to="." method="_on_tab_bar_tab_changed"]

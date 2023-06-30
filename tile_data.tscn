@@ -1,0 +1,128 @@
+[gd_scene load_steps=5 format=3 uid="uid://envugburucq1"]
+
+[ext_resource type="Texture2D" uid="uid://bowelu21kfovr" path="res://icon.svg" id="1_jtxvb"]
+
+[sub_resource type="GDScript" id="GDScript_cpkop"]
+resource_name = "TileData"
+script/source = "extends Control
+
+@export var tileset : TileSet
+@onready var checkerboard := get_theme_icon(\"Checkerboard\", \"EditorIcons\")
+
+func _draw():
+	for f in tileset.get_source_count():
+		var source = tileset.get_source(tileset.get_source_id(f))
+		if !source or !source.texture:
+			continue
+		draw_texture_rect(checkerboard, Rect2(Vector2(0, 0), source.texture.get_size()), true)
+		for t in source.get_tiles_count():
+			var coord = source.get_tile_id(t)
+			var rect = source.get_tile_texture_region(coord, 0)
+			var alt_count := source.get_alternative_tiles_count(coord)
+			var target_rect : Rect2
+			for a in alt_count:
+				var alt_id := 0
+				if a == 0:
+					target_rect = Rect2(rect.position, rect.size)
+				else:
+					target_rect = Rect2((a - 1) * rect.size.x * Vector2.RIGHT, rect.size)
+					alt_id = source.get_alternative_tile_id(coord, a)
+				var td = source.get_tile_data(coord, alt_id)
+				_draw_tile_data(source.texture, target_rect, rect, td)
+			
+			#if alt_count > 1:
+			#	alt_offset.y += rect.size.y
+
+func _draw_tile_data(texture: Texture2D, rect: Rect2, src_rect: Rect2, td: TileData) -> void:
+	var flipped_rect := rect
+	draw_texture_rect_region(texture, flipped_rect, src_rect, td.modulate, td.transpose)
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	pass
+"
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_wc4y2"]
+texture = ExtResource("1_jtxvb")
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+4:0/0 = 0
+5:0/0 = 0
+6:0/0 = 0
+7:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
+4:1/0 = 0
+5:1/0 = 0
+6:1/0 = 0
+7:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+3:2/0 = 0
+4:2/0 = 0
+5:2/0 = 0
+6:2/0 = 0
+7:2/0 = 0
+0:3/0 = 0
+1:3/0 = 0
+2:3/0 = 0
+3:3/0 = 0
+4:3/0 = 0
+5:3/0 = 0
+6:3/0 = 0
+7:3/0 = 0
+0:4/0 = 0
+1:4/0 = 0
+2:4/0 = 0
+3:4/0 = 0
+4:4/0 = 0
+5:4/0 = 0
+6:4/0 = 0
+7:4/0 = 0
+0:5/0 = 0
+1:5/0 = 0
+2:5/0 = 0
+3:5/0 = 0
+4:5/0 = 0
+5:5/0 = 0
+6:5/0 = 0
+7:5/0 = 0
+0:6/0 = 0
+1:6/0 = 0
+2:6/0 = 0
+3:6/0 = 0
+4:6/0 = 0
+5:6/0 = 0
+6:6/0 = 0
+7:6/0 = 0
+0:7/0 = 0
+1:7/0 = 0
+2:7/0 = 0
+3:7/0 = 0
+4:7/0 = 0
+5:7/0 = 0
+6:7/0 = 0
+7:7/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_iiax5"]
+sources/0 = SubResource("TileSetAtlasSource_wc4y2")
+
+[node name="TileData" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("GDScript_cpkop")
+tileset = SubResource("TileSet_iiax5")

@@ -1,0 +1,144 @@
+[gd_scene load_steps=3 format=3 uid="uid://bw76mt5qqsvhj"]
+
+[ext_resource type="Script" path="res://addons/Node-16 Framework/Framework Menu/Settings/Settings.gd" id="1_pdjtu"]
+[ext_resource type="Texture2D" uid="uid://bcwsiiqh6qawa" path="res://addons/Node-16 Framework/icon.svg" id="1_q0cv4"]
+
+[node name="Settings" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_pdjtu")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Toolbar" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="LineEdit" type="LineEdit" parent="VBoxContainer/Toolbar"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Filter Settings"
+
+[node name="CheckButton" type="CheckButton" parent="VBoxContainer/Toolbar"]
+layout_mode = 2
+text = "Advanced Settings"
+
+[node name="HSplitContainer" type="HSplitContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Tree" type="Tree" parent="VBoxContainer/HSplitContainer"]
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+scroll_horizontal_enabled = false
+
+[node name="Panel" type="Panel" parent="VBoxContainer/HSplitContainer"]
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/HSplitContainer/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/HSplitContainer/Panel/MarginContainer"]
+layout_mode = 2
+vertical_scroll_mode = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HSplitContainer/Panel/MarginContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Bool" type="HBoxContainer" parent="VBoxContainer/HSplitContainer/Panel/MarginContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="HBoxContainer" parent="VBoxContainer/HSplitContainer/Panel/MarginContainer/ScrollContainer/VBoxContainer/Bool"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+
+[node name="Label" type="Label" parent="VBoxContainer/HSplitContainer/Panel/MarginContainer/ScrollContainer/VBoxContainer/Bool/Label"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Bool"
+
+[node name="Button" type="Button" parent="VBoxContainer/HSplitContainer/Panel/MarginContainer/ScrollContainer/VBoxContainer/Bool/Label"]
+layout_mode = 2
+icon = ExtResource("1_q0cv4")
+flat = true
+
+[node name="CheckBox" type="CheckBox" parent="VBoxContainer/HSplitContainer/Panel/MarginContainer/ScrollContainer/VBoxContainer/Bool"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+text = "Test"
+
+[node name="Int" type="HBoxContainer" parent="VBoxContainer/HSplitContainer/Panel/MarginContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="HBoxContainer" parent="VBoxContainer/HSplitContainer/Panel/MarginContainer/ScrollContainer/VBoxContainer/Int"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+
+[node name="Label" type="Label" parent="VBoxContainer/HSplitContainer/Panel/MarginContainer/ScrollContainer/VBoxContainer/Int/Label"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Int"
+
+[node name="Button" type="Button" parent="VBoxContainer/HSplitContainer/Panel/MarginContainer/ScrollContainer/VBoxContainer/Int/Label"]
+layout_mode = 2
+icon = ExtResource("1_q0cv4")
+flat = true
+
+[node name="CheckBox" type="SpinBox" parent="VBoxContainer/HSplitContainer/Panel/MarginContainer/ScrollContainer/VBoxContainer/Int"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+
+[node name="Vector2i" type="HBoxContainer" parent="VBoxContainer/HSplitContainer/Panel/MarginContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="HBoxContainer" parent="VBoxContainer/HSplitContainer/Panel/MarginContainer/ScrollContainer/VBoxContainer/Vector2i"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+
+[node name="Label" type="Label" parent="VBoxContainer/HSplitContainer/Panel/MarginContainer/ScrollContainer/VBoxContainer/Vector2i/Label"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Vector2i"
+
+[node name="Button" type="Button" parent="VBoxContainer/HSplitContainer/Panel/MarginContainer/ScrollContainer/VBoxContainer/Vector2i/Label"]
+layout_mode = 2
+icon = ExtResource("1_q0cv4")
+flat = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HSplitContainer/Panel/MarginContainer/ScrollContainer/VBoxContainer/Vector2i"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CheckBox" type="SpinBox" parent="VBoxContainer/HSplitContainer/Panel/MarginContainer/ScrollContainer/VBoxContainer/Vector2i/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+prefix = "x"
+
+[node name="CheckBox2" type="SpinBox" parent="VBoxContainer/HSplitContainer/Panel/MarginContainer/ScrollContainer/VBoxContainer/Vector2i/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+prefix = "y"
