@@ -18,15 +18,17 @@ var mode = Mode.NORMAL
 @export var hint_color = Color.WHITE
 @export_flags_2d_physics var collision_mask = 1
 
+@export var force_int = false
+
 func is_colliding():
 	_update()
-	return get_distance_int() <= 0 
+	return get_distance_linear() <= 0 
 
 func tile_found():
 	_update()
-	return $Primary.is_colliding() or $Secondary.is_colliding()
+	return $Primary.is_colliding() or $Secondary.is_colliding() or $Primary_R.is_colliding() or $Secondary_R.is_colliding()
 
-func get_distance_int():
+func get_distance_linear():
 	_update()
 	match mode:
 		Mode.NORMAL:
@@ -37,11 +39,11 @@ func get_distance_int():
 			return _get_dist($Primary) + _get_dist($Secondary) - _get_dist_offset() - 16
 
 func get_distance_vector():
-	return get_distance_int() * _get_dir_vector()
+	return get_distance_linear() * _get_dir_vector()
 
 func get_normal():
 	_update()
-	return $Primary.get_collision_normal() if $Primary.is_colliding() else Vector2(0, -1)
+	return $Span.get_collision_normal()
 
 func get_slope():
 	return get_normal().rotated(PI/2)
@@ -56,13 +58,23 @@ func get_angle_hex():
 
 func _ready():
 	if !Engine.is_editor_hint():
-		for f in range(0, 4):
-			var names = ["Primary", "Primary_R", "Secondary", "Secondary_R"]
+		for f in range(0, 5):
+			var names = ["Primary", "Primary_R", "Secondary", "Secondary_R", "Span"]
 			var node = RayCast2D.new()
 			node.name = names[f]
 			node.hit_from_inside = true
 			add_child(node)
 		_update()
+
+func _var_floor(value):
+	if force_int:
+		return floor(value)
+	return value
+
+func _var_ceil(value):
+	if force_int:
+		return ceil(value)
+	return value#+1
 
 func _get_dir_vector(abs=false):
 	var vector = Vector2(1, 0) if direction == Dir.RIGHT \
@@ -74,13 +86,21 @@ func _get_dir_vector(abs=false):
 func _get_dist_offset(abs=false):
 	var sign = -1 if direction == Dir.LEFT or direction == Dir.UP else 1
 	sign = 1 if abs == true else sign
-	var pad = -1 if sign == -1 else 0
-	return wrap(floor(global_position.x*sign+pad), 0, 16)+1 if axis == Axis.X else wrap(floor(global_position.y*sign+pad), 0, 16)+1
+	if sign == 1:
+		return wrapf(_var_floor(global_position.x), 0, 16)+1 if axis == Axis.X else wrapf(_var_floor(global_position.y), 0, 16)+1
+	else:
+		return 16-wrapf(_var_floor(global_position.x), 0, 16) if axis == Axis.X else 16-wrapf(_var_floor(global_position.y), 0, 16)
+	#var _var_floor_ceil = func _var_floor_ceil(value, sign):
+	#	return _var_floor(value) if sign == 1 else _var_ceil(value)
+	#var sign = -1 if direction == Dir.LEFT or direction == Dir.UP else 1
+	#sign = 1 if abs == true else sign
+	#var pad = -1 if sign == -1 else 0
+	#return wrapf(_var_floor_ceil.call(global_position.x*sign, sign), 0, 16)+pad+1 if axis == Axis.X else wrapf(_var_floor_ceil.call(global_position.y*sign, sign), 0, 16)+pad+1
 
 func _get_dist(sensor):
 	if sensor.is_colliding():
-		return floor((sensor.get_collision_point().x - sensor.global_position.x) * sign(sensor.target_position.x)) if axis == Axis.X \
-		else floor((sensor.get_collision_point().y - sensor.global_position.y) * sign(sensor.target_position.y))
+		return _var_floor((sensor.get_collision_point().x - sensor.global_position.x) * sign(sensor.target_position.x)) if axis == Axis.X \
+		else _var_floor((sensor.get_collision_point().y - sensor.global_position.y) * sign(sensor.target_position.y))
 	else:
 		return 16
 
@@ -98,6 +118,8 @@ func _switch_mode():
 	else Mode.NORMAL
 
 func _update():
+	if !is_node_ready():
+		await ready
 	var ext = func ext():
 		var tmp = 0 if mode == Mode.NORMAL else 16 if mode == Mode.EXTENSION else -16
 		return -tmp if direction == Dir.LEFT or direction == Dir.UP else tmp
@@ -121,6 +143,8 @@ func _update():
 	$Secondary_R.position = $Secondary.position + $Secondary.target_position
 	$Secondary_R.target_position = -$Secondary.target_position
 	$Secondary_R.force_raycast_update()
+	$Span.position = $Secondary.position if mode == Mode.REGRESSION else $Primary.position
+	$Span.target_position = 16*_get_dir_vector() if mode == Mode.NORMAL else 32*_get_dir_vector()
 
 func _draw():
 	if Engine.is_editor_hint():

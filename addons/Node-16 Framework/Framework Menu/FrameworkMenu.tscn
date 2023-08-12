@@ -47,14 +47,9 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="Label" type="Label" parent="MarginContainer/VBoxContainer/Toolbar"]
-visible = false
 modulate = Color(1, 1, 1, 0.490196)
 layout_mode = 2
-text = "v0.0.1 pre-alpha"
-
-[node name="CheckButton" type="CheckButton" parent="MarginContainer/VBoxContainer/Toolbar"]
-layout_mode = 2
-text = "Disable Network Connectivity"
+text = "DISCLAIMER: EXTREMELY WIP CONCEPTUAL NON-FUNCTIONAL FRAMEWORK MAIN MENU"
 
 [node name="Info" type="Control" parent="MarginContainer/VBoxContainer"]
 unique_name_in_owner = true

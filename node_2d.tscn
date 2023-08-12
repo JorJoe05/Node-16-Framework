@@ -1,8 +1,7 @@
-[gd_scene load_steps=11 format=3 uid="uid://dhyinoombcc7o"]
+[gd_scene load_steps=13 format=3 uid="uid://dhyinoombcc7o"]
 
 [ext_resource type="Texture2D" uid="uid://bowelu21kfovr" path="res://icon.svg" id="1_h22so"]
-[ext_resource type="Script" path="res://core/TileCheck/TileCheck.gd" id="2_3e1bv"]
-[ext_resource type="Script" path="res://Player.gd" id="2_7fqxi"]
+[ext_resource type="Script" path="res://Nodes/Player/Player.gd" id="2_7fqxi"]
 [ext_resource type="Script" path="res://core/PlayerCollider/PlayerCollider.gd" id="4_yrlct"]
 
 [sub_resource type="TileMapPattern" id="TileMapPattern_s02rq"]
@@ -88,6 +87,28 @@ pattern_1 = SubResource("TileMapPattern_8wr5m")
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8081u"]
 size = Vector2(392, 16)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_luu50"]
+size = Vector2(64, 64)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_5ynu0"]
+radius = 159.028
+
+[sub_resource type="GDScript" id="GDScript_7j2w5"]
+script/source = "extends CollisionShape2D
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+#func _draw():
+	#draw_circle(position, shape.radius, Color.WHITE)
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	pass
+"
+
 [node name="Node2D" type="Node2D"]
 
 [node name="TileMap" type="TileMap" parent="."]
@@ -119,9 +140,34 @@ position = Vector2(188, 6)
 scale = Vector2(3.0625, 0.125)
 texture = ExtResource("1_h22so")
 
+[node name="StaticBody2D4" type="StaticBody2D" parent="."]
+position = Vector2(407, 50)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D4"]
+position = Vector2(9.00006, 22)
+shape = SubResource("RectangleShape2D_luu50")
+
+[node name="Icon" type="Sprite2D" parent="StaticBody2D4"]
+position = Vector2(9.00009, 22)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1_h22so")
+
+[node name="StaticBody2D5" type="StaticBody2D" parent="."]
+position = Vector2(255, -238)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D5"]
+shape = SubResource("CircleShape2D_5ynu0")
+script = SubResource("GDScript_7j2w5")
+
+[node name="Icon" type="Sprite2D" parent="StaticBody2D5"]
+visible = false
+position = Vector2(9.00009, 22)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1_h22so")
+
 [node name="StaticBody2D3" type="StaticBody2D" parent="."]
-position = Vector2(363, -277)
-rotation = 2.35619
+position = Vector2(747, -205)
+rotation = 2.56026
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D3"]
 position = Vector2(188, 6)
@@ -133,19 +179,24 @@ scale = Vector2(3.0625, 0.125)
 texture = ExtResource("1_h22so")
 
 [node name="Player" type="Node2D" parent="."]
-position = Vector2(56, -24)
+position = Vector2(246, -449)
 script = ExtResource("2_7fqxi")
 metadata/_edit_group_ = true
 
+[node name="Camera2D" type="Camera2D" parent="Player"]
+
 [node name="Icon" type="Sprite2D" parent="Player"]
+visible = false
+position = Vector2(0, 4)
 scale = Vector2(0.25, 0.25)
 texture = ExtResource("1_h22so")
-
-[node name="Camera2D" type="Camera2D" parent="Player"]
 
 [node name="PlayerCollider" type="Node2D" parent="Player"]
 script = ExtResource("4_yrlct")
 
-[node name="TileCheck" type="Node2D" parent="Player"]
-position = Vector2(0, 15)
-script = ExtResource("2_3e1bv")
+[node name="ReferenceRect" type="ReferenceRect" parent="Player/PlayerCollider"]
+visible = false
+offset_left = -9.0
+offset_top = -19.0
+offset_right = 9.0
+offset_bottom = 19.0

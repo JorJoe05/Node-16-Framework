@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://cdjgxocf45qfx"]
 
-[ext_resource type="Texture2D" uid="uid://dnmv8sjoj8noo" path="res://Branding/Icons/Universal/icon_small.svg" id="1_1ua1h"]
-[ext_resource type="Texture2D" uid="uid://8va2be6ojxvw" path="res://Branding/Logo_White.svg" id="2_patt1"]
+[ext_resource type="Texture2D" uid="uid://dnmv8sjoj8noo" path="res://Branding/Icons/Universal/icon_small.svg" id="1_owed2"]
+[ext_resource type="Texture2D" uid="uid://8va2be6ojxvw" path="res://Branding/Logo_White.svg" id="2_ki3rg"]
 [ext_resource type="PackedScene" uid="uid://dndouo4etayw3" path="res://addons/Node-16 Framework/Framework Menu/Info/Applets/Changelog/Changelog.tscn" id="3_8majh"]
 [ext_resource type="PackedScene" uid="uid://bbrkpf6lypgft" path="res://addons/Node-16 Framework/Framework Menu/Info/Applets/Commit History/CommitHistory.tscn" id="3_owrgo"]
 
@@ -50,7 +50,7 @@ alignment = 1
 
 [node name="TextureRect" type="TextureRect" parent="MarginContainer/ScrollContainer/Info/MarginContainer/HBoxContainer"]
 layout_mode = 2
-texture = ExtResource("1_1ua1h")
+texture = ExtResource("1_owed2")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/ScrollContainer/Info/MarginContainer/HBoxContainer"]
 layout_mode = 2
@@ -59,12 +59,12 @@ alignment = 2
 [node name="TextureRect" type="TextureRect" parent="MarginContainer/ScrollContainer/Info/MarginContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 4
-texture = ExtResource("2_patt1")
+texture = ExtResource("2_ki3rg")
 
-[node name="Label2" type="Label" parent="MarginContainer/ScrollContainer/Info/MarginContainer/HBoxContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="MarginContainer/ScrollContainer/Info/MarginContainer/HBoxContainer/VBoxContainer"]
 self_modulate = Color(1, 1, 1, 0.490196)
 layout_mode = 2
-text = "v0.0.1 pre-alpha"
+text = "not even pre-alpha lmao"
 horizontal_alignment = 1
 
 [node name="Changelog" parent="MarginContainer/ScrollContainer/Info" instance=ExtResource("3_8majh")]

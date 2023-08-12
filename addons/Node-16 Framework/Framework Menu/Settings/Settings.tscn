@@ -1,7 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://bw76mt5qqsvhj"]
+[gd_scene load_steps=2 format=3 uid="uid://bw76mt5qqsvhj"]
 
 [ext_resource type="Script" path="res://addons/Node-16 Framework/Framework Menu/Settings/Settings.gd" id="1_pdjtu"]
-[ext_resource type="Texture2D" uid="uid://bcwsiiqh6qawa" path="res://addons/Node-16 Framework/icon.svg" id="1_q0cv4"]
 
 [node name="Settings" type="Control"]
 layout_mode = 3
@@ -79,7 +78,6 @@ text = "Bool"
 
 [node name="Button" type="Button" parent="VBoxContainer/HSplitContainer/Panel/MarginContainer/ScrollContainer/VBoxContainer/Bool/Label"]
 layout_mode = 2
-icon = ExtResource("1_q0cv4")
 flat = true
 
 [node name="CheckBox" type="CheckBox" parent="VBoxContainer/HSplitContainer/Panel/MarginContainer/ScrollContainer/VBoxContainer/Bool"]
@@ -103,7 +101,6 @@ text = "Int"
 
 [node name="Button" type="Button" parent="VBoxContainer/HSplitContainer/Panel/MarginContainer/ScrollContainer/VBoxContainer/Int/Label"]
 layout_mode = 2
-icon = ExtResource("1_q0cv4")
 flat = true
 
 [node name="CheckBox" type="SpinBox" parent="VBoxContainer/HSplitContainer/Panel/MarginContainer/ScrollContainer/VBoxContainer/Int"]
@@ -126,7 +123,6 @@ text = "Vector2i"
 
 [node name="Button" type="Button" parent="VBoxContainer/HSplitContainer/Panel/MarginContainer/ScrollContainer/VBoxContainer/Vector2i/Label"]
 layout_mode = 2
-icon = ExtResource("1_q0cv4")
 flat = true
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HSplitContainer/Panel/MarginContainer/ScrollContainer/VBoxContainer/Vector2i"]

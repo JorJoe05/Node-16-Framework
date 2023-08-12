@@ -8,7 +8,10 @@ enum Axis {X, Y}
 @export var width_radius : int = 9 #7
 @export var height_radius : int = 19 #14
 @export var push_radius : int = 10 #10
-@export_enum("Right", "Down", "Left", "Up") var direction : int = Dir.DOWN
+@export_enum("Right", "Down", "Left", "Up") var direction : int = Dir.DOWN:
+	set(value):
+		direction = value
+		_position_sensors()
 @export_flags_2d_physics var collision_mask = 1
 var shift_sides = false
 
@@ -38,9 +41,96 @@ func _position_sensors():
 		var sensor_position = sensor_positions[f].rotated((direction-1)*PI/2)
 		sensors[f].position = Vector2(round(sensor_position.x), round(sensor_position.y))
 		sensors[f].direction = wrapi(sensor_directions[f] + (direction-1), 0, 4)
+	queue_redraw()
 
+# ---------- Floor (Sensors A and B) ----------
+
+func get_active_floor_sensor():
+	_position_sensors()
+	var compare = $Sensor_A.get_distance_linear() <= $Sensor_B.get_distance_linear()
+	return $Sensor_A if compare else $Sensor_B
+
+func is_on_floor():
+	return get_active_floor_sensor().is_colliding()
+
+func get_dist_linear_floor():
+	return get_active_floor_sensor().get_distance_linear()
+
+func get_dist_vector_floor():
+	return get_active_floor_sensor().get_distance_vector()
+
+func get_normal_floor():
+	return get_active_floor_sensor().get_normal()
+
+# ---------- Ceiling (Sensors C and D) ----------
+
+func get_active_ceiling_sensor():
+	_position_sensors()
+	var compare = $Sensor_C.get_distance_linear() <= $Sensor_D.get_distance_linear()
+	return $Sensor_C if compare else $Sensor_D
+
+func is_on_ceiling():
+	return $Sensor_C.is_colliding() or $Sensor_D.is_colliding()
+
+func get_dist_linear_ceiling():
+	return get_active_ceiling_sensor().get_distance_linear()
+
+func get_dist_vector_ceiling():
+	return get_active_ceiling_sensor().get_distance_vector()
+
+func get_normal_ceiling():
+	return get_active_ceiling_sensor().get_normal()
+
+# ---------- Wall (Sensors E and F) ----------
+
+func is_on_left_wall():
+	_position_sensors()
+	return $Sensor_E.is_colliding()
+
+func is_on_right_wall():
+	_position_sensors()
+	return $Sensor_F.is_colliding()
+
+func is_on_wall():
+	return is_on_left_wall() or is_on_right_wall()
+
+func get_dist_linear_left_wall():
+	_position_sensors()
+	return $Sensor_E.get_distance_linear()
+
+func get_dist_vector_left_wall():
+	_position_sensors()
+	return $Sensor_E.get_distance_vector()
+
+func get_dist_linear_right_wall():
+	_position_sensors()
+	return $Sensor_F.get_distance_linear()
+
+func get_dist_vector_right_wall():
+	_position_sensors()
+	return $Sensor_F.get_distance_vector()
+
+func _draw():
+	if true:#Engine.is_editor_hint():
+		var points = [
+				Vector2(-width_radius, -0.5).rotated(direction*PI/2-PI/2)+Vector2(0.5, 0.5), Vector2(-width_radius, height_radius+0.5).rotated(direction*PI/2-PI/2)+Vector2(0.5, 0.5),
+				Vector2(width_radius, -0.5).rotated(direction*PI/2-PI/2)+Vector2(0.5, 0.5), Vector2(width_radius, height_radius+0.5).rotated(direction*PI/2-PI/2)+Vector2(0.5, 0.5),
+				Vector2(-width_radius, 0.5).rotated(direction*PI/2-PI/2)+Vector2(0.5, 0.5), Vector2(-width_radius, -height_radius-0.5).rotated(direction*PI/2-PI/2)+Vector2(0.5, 0.5),
+				Vector2(width_radius, 0.5).rotated(direction*PI/2-PI/2)+Vector2(0.5, 0.5), Vector2(width_radius, -height_radius-0.5).rotated(direction*PI/2-PI/2)+Vector2(0.5, 0.5),
+				Vector2(0.5, 0).rotated(direction*PI/2-PI/2)+Vector2(0.5, 0.5), Vector2(-push_radius-0.5, 0).rotated(direction*PI/2-PI/2)+Vector2(0.5, 0.5),
+				Vector2(-0.5, 0).rotated(direction*PI/2-PI/2)+Vector2(0.5, 0.5), Vector2(push_radius+0.5, 0).rotated(direction*PI/2-PI/2)+Vector2(0.5, 0.5)
+			]
+		var offset = -Vector2(wrapf(global_position.x, 0, 1), wrapf(global_position.y, 0, 1))
+		draw_line(points[0], points[1], Color.GREEN, 1)
+		draw_line(points[2], points[3], Color.CYAN, 1)
+		draw_line(points[4], points[5], Color.DODGER_BLUE, 1)
+		draw_line(points[6], points[7], Color.YELLOW, 1)
+		draw_line(points[8], points[9], Color.MAGENTA, 1)
+		draw_line(points[10], points[11], Color.RED, 1)
+		for f in [Vector2.ZERO, Vector2.UP, Vector2.DOWN, Vector2.LEFT, Vector2.RIGHT]:
+			var col = Color.BLACK if f == Vector2.ZERO else Color.WHITE
+			draw_rect(Rect2(f, Vector2(1, 1)), col)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	if !Engine.is_editor_hint():
-		_position_sensors()
+	pass
