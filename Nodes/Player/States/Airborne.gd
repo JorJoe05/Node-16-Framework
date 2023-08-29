@@ -11,19 +11,30 @@ func update(_delta):
 # Virtual function. Corresponds to the `_physics_process()` callback.
 func physics_update(_delta):
 	#1. Check for jump button release (variable jump velocity).
+	if not Input.is_action_pressed("jump"):
+		if owner.velocity.y < -4:
+			owner.velocity.y = -4
 	#2. Check for turning Super.
 	#3. Update X Speed based on directional input.
+	owner.airborne_movement()
 	#4. Apply air drag.
+	owner.air_drag()
 	#5. Move the Player object
 	#    Updates X Position and Y Position based on X Speed and Y Speed.
+	owner.move()
 	#6. Apply gravity.
 	#    Update Y Speed by adding gravity to it.
 	#    This happens after the Player's position was updated. This is an important detail for ensuring the Player's jump height is correct.
+	owner.velocity.y += owner.grv
 	#7. Check underwater for reduced gravity.
 	#8. Rotate Ground Angle back to 0.
 	#9. All air collision checks occur here.
+	owner.switch_mode(0)
 	#    The sensors used depend on the sensor activation.
 	#    Active Airborne Push Sensors check first, then the active Airborne Ground Sensors/Ceiling Sensors second.
+	owner.wall_collision()
+	owner.floor_collision()
+	owner.ceiling_collision()
 	pass
 
 # Virtual function. Called by the state machine upon changing the active state. The `msg` parameter

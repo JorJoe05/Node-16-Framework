@@ -53,11 +53,18 @@ func get_active_floor_sensor():
 func is_on_floor():
 	return get_active_floor_sensor().is_colliding()
 
+func tile_found_floor():
+	return get_active_floor_sensor().tile_found()
+
 func get_dist_linear_floor():
-	return get_active_floor_sensor().get_distance_linear()
+	if tile_found_floor():
+		return get_active_floor_sensor().get_distance_linear()
+	return 0
 
 func get_dist_vector_floor():
-	return get_active_floor_sensor().get_distance_vector()
+	if tile_found_floor():
+		return get_active_floor_sensor().get_distance_vector()
+	return Vector2.ZERO
 
 func get_normal_floor():
 	return get_active_floor_sensor().get_normal()
@@ -71,6 +78,9 @@ func get_active_ceiling_sensor():
 
 func is_on_ceiling():
 	return $Sensor_C.is_colliding() or $Sensor_D.is_colliding()
+
+func tile_found_ceiling():
+	return get_active_ceiling_sensor().tile_found()
 
 func get_dist_linear_ceiling():
 	return get_active_ceiling_sensor().get_distance_linear()
@@ -93,6 +103,15 @@ func is_on_right_wall():
 
 func is_on_wall():
 	return is_on_left_wall() or is_on_right_wall()
+
+func tile_found_left_wall():
+	return $Sensor_E.tile_found()
+
+func tile_found_right_wall():
+	return $Sensor_F.tile_found()
+
+func tile_found_wall():
+	return tile_found_left_wall() or tile_found_right_wall()
 
 func get_dist_linear_left_wall():
 	_position_sensors()

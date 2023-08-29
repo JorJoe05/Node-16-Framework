@@ -11,8 +11,12 @@ func update(_delta):
 # Virtual function. Corresponds to the `_physics_process()` callback.
 func physics_update(_delta):
 	#1. Adjust Ground Speed based on current Ground Angle (Rolling Slope Factors).
+	owner.rolling_slope_factor()
 	#2. Check for starting a jump.
+	if Input.is_action_just_pressed("jump"):
+		state_machine.transition_to("Airborne", {"jump" = true})
 	#3. Update Ground Speed based on directional input and apply friction.
+	
 	#4. Wall sensor collision occurs.
 	#    Which sensors are used varies based on the the sensor activation.
 	#    This occurs before the Player's position physically moves, meaning he might not actually be touching the wall yet, the game accounts for this by adding the Player's X Speed and Y Speed to the sensor's position. 

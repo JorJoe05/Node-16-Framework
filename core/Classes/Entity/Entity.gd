@@ -19,11 +19,10 @@ var subpixel : Vector2 :
 	get:
 		return subpixel
 
-func move_grounded():
+func gsp_to_velocity():
 	velocity = Vector2(gsp*cos(ang), gsp*-sin(ang))
-	position += velocity
 
-func move_airborne():
+func move():
 	position += velocity
 
 # Called when the node enters the scene tree for the first time.

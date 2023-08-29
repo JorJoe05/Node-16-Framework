@@ -26,7 +26,7 @@ func is_colliding():
 
 func tile_found():
 	_update()
-	return $Primary.is_colliding() or $Secondary.is_colliding() or $Primary_R.is_colliding() or $Secondary_R.is_colliding()
+	return $Primary.is_colliding() or $Secondary.is_colliding() or $Primary_R.is_colliding() or $Secondary_R.is_colliding() or $Span.is_colliding()
 
 func get_distance_linear():
 	_update()
@@ -145,6 +145,7 @@ func _update():
 	$Secondary_R.force_raycast_update()
 	$Span.position = $Secondary.position if mode == Mode.REGRESSION else $Primary.position
 	$Span.target_position = 16*_get_dir_vector() if mode == Mode.NORMAL else 32*_get_dir_vector()
+	$Span.force_raycast_update()
 
 func _draw():
 	if Engine.is_editor_hint():

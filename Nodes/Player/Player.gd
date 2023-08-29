@@ -14,67 +14,89 @@ const dec = 0.5 # 128 subpxels
 const frc = 0.046875 # 12 subpixels
 const top = 6
 const grv = 0.21875 # 56 subpixels
+const jmp = 6.5
 
 const slp = 0.125 # 32 subpixels
 const slp_up = 0.078125 # 20 subpixels
 const slp_down = 0.3125 # 80 subpixels
 const slp_min = 0.05078125 # 13 subpixels
 
+# ----- built-in functions -----
+
 func _ready():
 	pass
 
-func mostly_moving_retro():
-	var hex = RMath.hex_point_dir(velocity.x, velocity.y)
-	if 255 >= hex and hex >= 224:
-		return Dir.RIGHT
-	elif 223 >= hex and hex >= 160:
-		return Dir.UP
-	elif 159 >= hex and hex >= 96:
-		return Dir.LEFT
-	elif 95 >= hex and hex >= 32:
-		return Dir.DOWN
-	elif 31 >= hex and hex >= 0:
-		return Dir.RIGHT
+# ----- collision -----
 
-func mostly_moving() -> int:
-	var rad = atan2(velocity.y, velocity.x)
-	return wrapi(round(rad/(PI/2)), 0, 4)
-	# 0=Right 1=Down 2=Left 3=Up
+func can_snap_floor():
+	var dist = Collider.get_dist_linear_floor()
+	var vh = velocity.y if Collider.direction % 2 == 0 else velocity.x
+	return abs(dist) <= 14
+	#return dist >= -14 and dist <= min(abs(vh) + 4, 14)
 
-func switch_mode_retro():
-	var degrees = wrapi(round(rad_to_deg(ang)), 0, 360)
-	if degrees >= 0 and degrees <= 46:
-		Collider.direction = Collider.Dir.DOWN
-	elif degrees >= 46 and degrees <= 135:
-		Collider.direction = Collider.Dir.RIGHT
-	elif degrees >= 135 and degrees <= 226:
-		Collider.direction = Collider.Dir.UP
-	elif degrees >= 226 and degrees <= 315:
-		Collider.direction = Collider.Dir.LEFT
-	elif degrees >= 315 and degrees <= 360:
-		Collider.direction = Collider.Dir.DOWN
+func floor_collision():
+	if Collider.get_dist_linear_floor() < 0:
+		position += Collider.get_dist_vector_floor()
+		update_ang()
+		land_on_floor()
+		$StateMachine.transition_to("Normal")
+
+func wall_collision():
+	if Collider.get_dist_linear_left_wall() < 0:
+		position += Collider.get_dist_vector_left_wall()
+		velocity.x = 0
+	if Collider.get_dist_linear_right_wall() < 0:
+		position += Collider.get_dist_vector_right_wall()
+		velocity.x = 0
+
+func ceiling_collision():
+	if Collider.get_dist_linear_ceiling() < 0:
+		position += Collider.get_dist_vector_ceiling()
+		velocity.y = 0
+
+func floor_snap():
+	if can_snap_floor():
+		position += Collider.get_dist_vector_floor()
+	if not Collider.tile_found_floor():
+		$StateMachine.transition_to("Airborne")
+
+# ----- update functions -----
+
+func update_ang(use_ceiling:=false):
+	var nrm = Collider.get_normal_floor().rotated(PI/2)
+	if Collider.tile_found_floor():
+		ang = atan2(-nrm.y, nrm.x)
+	else:
+		ang = 0
 
 func switch_mode(mode:int=-1) -> int:
 	var to = wrapi(round(ang/(PI/2)), 0, 4) if mode == -1 else mode
+	Collider.direction = 0
 	match to:
 		0:
+			Collider.direction = Collider.Dir.DOWN
 			return Mode.FLOOR
 		1:
+			Collider.direction = Collider.Dir.RIGHT
 			return Mode.RIGHTWALL
 		2:
+			Collider.direction = Collider.Dir.UP
 			return Mode.CEILING
 		3:
+			Collider.direction = Collider.Dir.LEFT
 			return Mode.LEFTWALL
 	return Mode.FLOOR
 
 func control_lock_update():
 	control_lock_timer = move_toward(control_lock_timer, 0, 1)
 
+# ----- state changes -----
+
 func land_on_floor():
 	var degrees = wrapi(round(rad_to_deg(ang)), 0, 360)
-	if 0 <= degrees <= 23 or 339 <= degrees <= 360:
+	if (0 <= degrees and degrees <= 23) or (339 <= degrees and degrees <= 360):
 		gsp = velocity.x
-	elif 24 <= degrees <= 45 or 316 <= degrees <= 338:
+	elif (24 <= degrees and degrees <= 45) or (316 <= degrees and degrees <= 338):
 		gsp = velocity.y * 0.5 * -sign(sin(ang))
 	else:
 		gsp = velocity.y * -sign(sin(ang))
@@ -88,6 +110,73 @@ func land_on_ceiling():
 		gsp = velocity.y * -sign(sin(ang))
 	else:
 		velocity.y = 0
+
+# ----- movement -----
+
+func floor_movement():
+	if Input.is_action_pressed("left") and !Input.is_action_pressed("right"):
+		if gsp > 0:
+			gsp -= dec
+			if gsp <= 0:
+				gsp = -0.5
+		elif gsp > -top:
+			gsp -= acc
+			gsp = max(gsp, -top)
+	elif Input.is_action_pressed("right") and !Input.is_action_pressed("left"):
+		if gsp < 0:
+			gsp += dec
+			if gsp >= 0:
+				gsp = 0.5
+		elif gsp < top:
+			gsp += acc
+			gsp = min(gsp, top)
+	else:
+		gsp -= min(abs(gsp), frc) * sign(gsp)
+
+func airborne_movement():
+	if Input.is_action_pressed("left") and !Input.is_action_pressed("right"):
+		if velocity.x > -top:
+			velocity.x -= acc*2
+			velocity.x = max(velocity.x, -top)
+	elif Input.is_action_pressed("right") and !Input.is_action_pressed("left"):
+		if velocity.x < top:
+			velocity.x += acc*2
+			velocity.x = min(velocity.x, top)
+
+func roll_deceleration():
+	pass
+
+func slope_factor():
+	gsp -= slp*sin(ang)
+
+func rolling_slope_factor():
+	var slope = slp_up if sign(gsp) == sign(ang) else slp_down
+	gsp -= slope*sin(ang)
+
+func air_drag():
+	if velocity.y < 0 and velocity.y > -4:
+		velocity.x -= (floor(velocity.x / 0.125) / 256)
+
+# ----- miscellaneous checks -----
+
+func can_slip_s3():
+	var degrees = wrapi(round(rad_to_deg(ang)), 0, 360)
+	if degrees >= 35 and degrees <= 326:
+		if degrees >= 69 and degrees <= 293:
+			return 2
+		return 1
+	return 0
+
+func can_slip():
+	var degrees = wrapi(round(rad_to_deg(ang)), 0, 360)
+	if degrees >= 46 and degrees <= 315:
+		return true
+	return false
+
+func mostly_moving() -> int:
+	var rad = atan2(velocity.y, velocity.x)
+	return wrapi(round(rad/(PI/2)), 0, 4)
+	# 0=Right 1=Down 2=Left 3=Up
 
 func _physics_process(delta):
 	pass
