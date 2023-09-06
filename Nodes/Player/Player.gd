@@ -4,6 +4,10 @@ enum Dir {RIGHT, DOWN, LEFT, UP}
 enum Mode {FLOOR, RIGHTWALL, CEILING, LEFTWALL}
 
 @onready var Collider = $PlayerCollider
+@export var width_radius = 9
+@export var height_radius = 19
+@export var roll_width_radius = 7
+@export var roll_height_radius = 14
 
 var control_lock_timer : int = 0
 
@@ -45,9 +49,11 @@ func wall_collision():
 	if Collider.get_dist_linear_left_wall() < 0:
 		position += Collider.get_dist_vector_left_wall()
 		velocity.x = 0
+		gsp=0
 	if Collider.get_dist_linear_right_wall() < 0:
 		position += Collider.get_dist_vector_right_wall()
 		velocity.x = 0
+		gsp=0
 
 func ceiling_collision():
 	if Collider.get_dist_linear_ceiling() < 0:
@@ -94,14 +100,16 @@ func control_lock_update():
 
 func land_on_floor():
 	var degrees = wrapi(round(rad_to_deg(ang)), 0, 360)
+	var degrees_offset = wrapi(degrees, -180, 180)
 	if (0 <= degrees and degrees <= 23) or (339 <= degrees and degrees <= 360):
 		gsp = velocity.x
 	elif (24 <= degrees and degrees <= 45) or (316 <= degrees and degrees <= 338):
-		gsp = velocity.y * 0.5 * -sign(sin(ang))
+		gsp = velocity.y * 0.5 * -sign(sin(degrees_offset))
 	else:
-		gsp = velocity.y * -sign(sin(ang))
+		gsp = velocity.y * -sign(sin(degrees_offset))
 	if mostly_moving() == Dir.LEFT or mostly_moving() == Dir.RIGHT:
 		gsp = velocity.x
+	print(degrees_offset)
 
 func land_on_ceiling():
 	var degrees = wrapi(round(rad_to_deg(ang)), 0, 360)
@@ -110,6 +118,16 @@ func land_on_ceiling():
 		gsp = velocity.y * -sign(sin(ang))
 	else:
 		velocity.y = 0
+
+func enter_roll():
+	position.y += Collider.height_radius - roll_height_radius
+	Collider.width_radius = roll_width_radius
+	Collider.height_radius = roll_height_radius
+
+func exit_roll():
+	position.y += Collider.height_radius - height_radius
+	Collider.width_radius = width_radius
+	Collider.height_radius = height_radius
 
 # ----- movement -----
 
@@ -144,7 +162,17 @@ func airborne_movement():
 			velocity.x = min(velocity.x, top)
 
 func roll_deceleration():
-	pass
+	if Input.is_action_pressed("left") and !Input.is_action_pressed("right"):
+		if gsp > 0:
+			gsp -= dec/4
+			if gsp <= 0:
+				gsp = -0.5
+	elif Input.is_action_pressed("right") and !Input.is_action_pressed("left"):
+		if gsp < 0:
+			gsp += dec/4
+			if gsp >= 0:
+				gsp = 0.5
+	gsp -= min(abs(gsp), frc/2) * sign(gsp)
 
 func slope_factor():
 	gsp -= slp*sin(ang)
@@ -171,6 +199,12 @@ func can_slip():
 	var degrees = wrapi(round(rad_to_deg(ang)), 0, 360)
 	if degrees >= 46 and degrees <= 315:
 		return true
+	return false
+
+func can_roll():
+	if not (Input.is_action_pressed("left") or Input.is_action_pressed("right")):
+		if Input.is_action_pressed("down") and abs(gsp) >= 0.5:
+			return true
 	return false
 
 func mostly_moving() -> int:

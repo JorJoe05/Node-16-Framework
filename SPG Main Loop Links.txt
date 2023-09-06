@@ -1,0 +1,37 @@
+Normal
+1. https://info.sonicretro.org/SPG:Animations - Balancing
+2. https://info.sonicretro.org/SPG:Special_Abilities - Spindash
+3. https://info.sonicretro.org/SPG:Slope_Physics - Slope Factor
+4. https://info.sonicretro.org/SPG:Jumping
+5. https://info.sonicretro.org/SPG:Running
+6.  - Crouching
+   https://info.sonicretro.org/SPG:Slope_Collision - Balancing
+7. https://info.sonicretro.org/SPG:Slope_Collision - Push Sensors
+8. https://info.sonicretro.org/SPG:Rolling
+9.  - Camera Bounds
+10. https://info.sonicretro.org/SPG:Slope_Physics - Movement
+11. https://info.sonicretro.org/SPG:Slope_Collision - Ground Sensors
+12. https://info.sonicretro.org/SPG:Slope_Physic - Slipping/Falling
+
+Rolling
+1. https://info.sonicretro.org/SPG:Slope_Physics - Rolling Slope Factor
+2. https://info.sonicretro.org/SPG:Jumping
+3. https://info.sonicretro.org/SPG:Rolling - Deceleration and Friction
+4. https://info.sonicretro.org/SPG:Slope_Collision - Push Sensors
+5.  - Camera Bounds
+6. https://info.sonicretro.org/SPG:Slope_Physics - Movement
+7. https://info.sonicretro.org/SPG:Slope_Collision - Ground Sensors
+8. https://info.sonicretro.org/SPG:Slope_Physic - Slipping/Falling
+
+Airborne
+1. https://info.sonicretro.org/SPG:Jumping - Variable Jump Height
+2.  - Super Check
+3.  - X Speed Input
+4. https://info.sonicretro.org/SPG:Air_State - Air Drag
+5.  - Movement
+6. https://info.sonicretro.org/SPG:Air_State - Gravity
+7.  - Check Underwater
+8. https://info.sonicretro.org/SPG:Air_State - Rotate Back To 0
+9. https://info.sonicretro.org/SPG:Slope_Collision - Airborne Push Sensors
+   https://info.sonicretro.org/SPG:Slope_Collision - Airborne Ground Sensors
+   https://info.sonicretro.org/SPG:Slope_Collision - Ceiling Sensors
