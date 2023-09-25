@@ -25,9 +25,12 @@ const slp_up = 0.078125 # 20 subpixels
 const slp_down = 0.3125 # 80 subpixels
 const slp_min = 0.05078125 # 13 subpixels
 
+var camera_focus_offset = Vector2(0, 0)
+
 # ----- built-in functions -----
 
 func _ready():
+	GlobalCamera.focus_object = self
 	pass
 
 # ----- collision -----
@@ -104,12 +107,11 @@ func land_on_floor():
 	if (0 <= degrees and degrees <= 23) or (339 <= degrees and degrees <= 360):
 		gsp = velocity.x
 	elif (24 <= degrees and degrees <= 45) or (316 <= degrees and degrees <= 338):
-		gsp = velocity.y * 0.5 * -sign(sin(degrees_offset))
+		gsp = velocity.y * 0.5 * -sign(sin(deg_to_rad(degrees_offset)))
 	else:
-		gsp = velocity.y * -sign(sin(degrees_offset))
+		gsp = velocity.y * -sign(sin(deg_to_rad(degrees_offset)))
 	if mostly_moving() == Dir.LEFT or mostly_moving() == Dir.RIGHT:
 		gsp = velocity.x
-	print(degrees_offset)
 
 func land_on_ceiling():
 	var degrees = wrapi(round(rad_to_deg(ang)), 0, 360)
@@ -139,7 +141,7 @@ func floor_movement():
 				gsp = -0.5
 		elif gsp > -top:
 			gsp -= acc
-			gsp = max(gsp, -top)
+			#gsp = max(gsp, -top)
 	elif Input.is_action_pressed("right") and !Input.is_action_pressed("left"):
 		if gsp < 0:
 			gsp += dec
@@ -147,7 +149,7 @@ func floor_movement():
 				gsp = 0.5
 		elif gsp < top:
 			gsp += acc
-			gsp = min(gsp, top)
+			#gsp = min(gsp, top)
 	else:
 		gsp -= min(abs(gsp), frc) * sign(gsp)
 

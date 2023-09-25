@@ -9,7 +9,7 @@ func _refresh():
 		add_child(httpreq)
 		httpreq.request_completed.connect(_request_completed)
 		#var err = httpreq.request("https://api.github.com/repos/SuperFreaksDev/Super-Freaks-1-Ultimate-Edition/commits")
-		var err = httpreq.request("https://api.github.com/repos/Rubberduckycooly/Sonic-Mania-Decompilation/commits")
+		var err = httpreq.request("https://api.github.com/repos/JorJoe05/Node-16-Framework/commits")
 		if err != OK:
 			push_error("Error in HTTP request")
 	else:

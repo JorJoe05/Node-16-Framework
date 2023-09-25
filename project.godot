@@ -21,14 +21,22 @@ config/icon="res://Branding/Icons/Universal/icon.svg"
 [autoload]
 
 RMath="*res://core/Autoloads/RMath.gd"
+GlobalCamera="*res://Nodes/Camera/GlobalCamera.tscn"
 
 [display]
 
 window/size/viewport_width=320
 window/size/viewport_height=224
-window/size/window_width_override=960
-window/size/window_height_override=672
+window/size/window_width_override=640
+window/size/window_height_override=448
 window/stretch/mode="viewport"
+window/vsync/vsync_mode=0
+
+[editor]
+
+movie_writer/movie_file="/home/jorjoe05/Documents/Godot/Godot 4/Node-16 Framework/Movies/Movie.avi"
+naming/node_name_num_separator=2
+naming/scene_name_casing=1
 
 [editor_plugins]
 
@@ -38,7 +46,7 @@ enabled=PackedStringArray("res://addons/BitmapTileCollision/plugin.cfg", "res://
 
 up={
 "deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":4194320,"key_label":0,"unicode":0,"echo":false,"script":null)
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":4194320,"physical_keycode":4194320,"key_label":4194320,"unicode":0,"echo":false,"script":null)
 ]
 }
 down={

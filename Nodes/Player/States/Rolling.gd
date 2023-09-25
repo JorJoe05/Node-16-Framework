@@ -39,6 +39,12 @@ func physics_update(_delta):
 	owner.floor_snap()
 	owner.switch_mode()
 	#8. Check for slipping/falling when Ground Speed is too low on walls/ceilings.
+	if abs(owner.gsp) >= 8:
+		GlobalCamera.speed.y = 24
+	else:
+		GlobalCamera.speed.y = 6
+	GlobalCamera.use_grounded_margin = true
+	GlobalCamera.focus()
 	pass
 
 # Virtual function. Called by the state machine upon changing the active state. The `msg` parameter

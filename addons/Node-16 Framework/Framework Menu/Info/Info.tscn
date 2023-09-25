@@ -2,8 +2,8 @@
 
 [ext_resource type="Texture2D" uid="uid://dnmv8sjoj8noo" path="res://Branding/Icons/Universal/icon_small.svg" id="1_owed2"]
 [ext_resource type="Texture2D" uid="uid://8va2be6ojxvw" path="res://Branding/Logo_White.svg" id="2_ki3rg"]
-[ext_resource type="PackedScene" uid="uid://dndouo4etayw3" path="res://addons/Node-16 Framework/Framework Menu/Info/Applets/Changelog/Changelog.tscn" id="3_8majh"]
 [ext_resource type="PackedScene" uid="uid://bbrkpf6lypgft" path="res://addons/Node-16 Framework/Framework Menu/Info/Applets/Commit History/CommitHistory.tscn" id="3_owrgo"]
+[ext_resource type="PackedScene" uid="uid://dndouo4etayw3" path="res://addons/Node-16 Framework/Framework Menu/Info/Applets/FilePreview/FilePreview.tscn" id="3_u2jlf"]
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -64,51 +64,20 @@ texture = ExtResource("2_ki3rg")
 [node name="Label" type="Label" parent="MarginContainer/ScrollContainer/Info/MarginContainer/HBoxContainer/VBoxContainer"]
 self_modulate = Color(1, 1, 1, 0.490196)
 layout_mode = 2
-text = "not even pre-alpha lmao"
+text = "pre-alpha"
 horizontal_alignment = 1
 
-[node name="Changelog" parent="MarginContainer/ScrollContainer/Info" instance=ExtResource("3_8majh")]
+[node name="License" parent="MarginContainer/ScrollContainer/Info" instance=ExtResource("3_u2jlf")]
 layout_mode = 2
+file_path = "res://LICENSE"
+
+[node name="Readme" parent="MarginContainer/ScrollContainer/Info" instance=ExtResource("3_u2jlf")]
+layout_mode = 2
+file_path = "res://README.md"
+
+[node name="Changelog" parent="MarginContainer/ScrollContainer/Info" instance=ExtResource("3_u2jlf")]
+layout_mode = 2
+file_path = "res://CHANGELOG.md"
 
 [node name="CommitHistory" parent="MarginContainer/ScrollContainer/Info" instance=ExtResource("3_owrgo")]
 layout_mode = 2
-
-[node name="Button" type="Button" parent="MarginContainer/ScrollContainer/Info"]
-custom_minimum_size = Vector2(256, 256)
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="Button2" type="Button" parent="MarginContainer/ScrollContainer/Info"]
-custom_minimum_size = Vector2(256, 256)
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="Button3" type="Button" parent="MarginContainer/ScrollContainer/Info"]
-custom_minimum_size = Vector2(256, 256)
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="Button4" type="Button" parent="MarginContainer/ScrollContainer/Info"]
-custom_minimum_size = Vector2(256, 256)
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="Button5" type="Button" parent="MarginContainer/ScrollContainer/Info"]
-custom_minimum_size = Vector2(256, 256)
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="Button6" type="Button" parent="MarginContainer/ScrollContainer/Info"]
-custom_minimum_size = Vector2(256, 256)
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="Button7" type="Button" parent="MarginContainer/ScrollContainer/Info"]
-custom_minimum_size = Vector2(256, 256)
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="Button8" type="Button" parent="MarginContainer/ScrollContainer/Info"]
-custom_minimum_size = Vector2(256, 256)
-layout_mode = 2
-size_flags_vertical = 3

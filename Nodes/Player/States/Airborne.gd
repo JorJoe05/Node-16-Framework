@@ -11,7 +11,7 @@ func update(_delta):
 # Virtual function. Corresponds to the `_physics_process()` callback.
 func physics_update(_delta):
 	#1. Check for jump button release (variable jump velocity).
-	if not Input.is_action_pressed("jump"):
+	if Input.is_action_just_released("jump"):
 		if owner.velocity.y < -4:
 			owner.velocity.y = -4
 	#2. Check for turning Super.
@@ -22,6 +22,9 @@ func physics_update(_delta):
 	#5. Move the Player object
 	#    Updates X Position and Y Position based on X Speed and Y Speed.
 	owner.move()
+	GlobalCamera.speed.y = 24
+	GlobalCamera.use_grounded_margin = false
+	GlobalCamera.focus()
 	#6. Apply gravity.
 	#    Update Y Speed by adding gravity to it.
 	#    This happens after the Player's position was updated. This is an important detail for ensuring the Player's jump height is correct.

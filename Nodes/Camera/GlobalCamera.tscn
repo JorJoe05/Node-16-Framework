@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://c10k6ptq5rb8u"]
+
+[ext_resource type="Script" path="res://Nodes/Camera/GlobalCamera.gd" id="1_jule3"]
+
+[node name="GlobalCamera" type="Camera2D"]
+process_callback = 0
+script = ExtResource("1_jule3")
