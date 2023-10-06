@@ -1,12 +1,16 @@
 @tool
 extends Node2D
-class_name TileCheck
+class_name NewTileCheck
 
 enum Dir {RIGHT, DOWN, LEFT, UP}
 enum Axis {X, Y}
 enum Mode {NORMAL, EXTENSION, REGRESSION}
 enum Solidity {EMPTY, FULL, PARTIAL}
 
+@export var enabled = true:
+	set(value):
+		enabled = value
+		_update()
 @export_enum("Right", "Down", "Left", "Up") var direction : int = Dir.DOWN :
 	set(value):
 		direction = value
@@ -14,138 +18,125 @@ enum Solidity {EMPTY, FULL, PARTIAL}
 var axis :
 	get:
 		return direction % 2
-var mode = Mode.NORMAL
+@export var mode = Mode.EXTENSION
 @export var hint_color = Color.WHITE
 @export_flags_2d_physics var collision_mask = 1
 
-@export var force_int = false
+var _top_only_rids = []
+var _sides_bottom_rids = []
+var _ignore_collision : bool
 
-func is_colliding():
+#----- Exposed Functions -----
+
+func is_colliding() -> bool:
+	if _ignore_collision or not enabled:
+		return false
+	return get_distance_linear() <= 0
+
+func tile_found() -> bool:
 	_update()
-	return get_distance_linear() <= 0 
+	if _ignore_collision or not enabled:
+		return false
+	return $Ray.is_colliding()
 
-func tile_found():
+func get_distance_linear() -> float:
+	if _ignore_collision or not enabled:
+		return 16
+	var vec = get_distance_vector()
+	var point_vec = $Ray.target_position
+	var point_ang = -(atan2(point_vec.y, point_vec.x) - (PI/2))
+	if tile_found():
+		return vec.rotated(point_ang).y
+	return 16
+
+func get_distance_vector() -> Vector2:
+	if _ignore_collision or not enabled:
+		return Vector2.ZERO
 	_update()
-	return $Primary.is_colliding() or $Secondary.is_colliding() or $Primary_R.is_colliding() or $Secondary_R.is_colliding() or $Span.is_colliding()
+	return $Ray.get_collision_point() - global_position - _compensation()
 
-func get_distance_linear():
+func get_normal() -> Vector2:
+	if _ignore_collision or not enabled:
+		return Vector2.ZERO
 	_update()
-	match mode:
-		Mode.NORMAL:
-			return _get_dist($Primary) - _get_dist_offset()
-		Mode.EXTENSION:
-			return _get_dist($Primary) + _get_dist($Secondary) - _get_dist_offset()
-		Mode.REGRESSION:
-			return _get_dist($Primary) + _get_dist($Secondary) - _get_dist_offset() - 16
+	return $Ray.get_collision_normal()
 
-func get_distance_vector():
-	return get_distance_linear() * _get_dir_vector()
-
-func get_normal():
-	_update()
-	return $Span.get_collision_normal()
-
-func get_slope():
+func get_slope() -> Vector2:
+	if _ignore_collision or not enabled:
+		return Vector2.ZERO
 	return get_normal().rotated(PI/2)
 
-func get_angle():
-	return wrapf(atan2(get_slope().y, get_slope().x), 0, PI*2)
+func get_angle() -> float:
+	if _ignore_collision or not enabled:
+		return 0
+	var vec = get_slope()
+	return wrapf(atan2(vec.y, vec.x), 0, PI*2)
 
-func get_angle_hex():
-	return floor(get_angle() * 256/(2*PI))
-
-# All functions beginning with an underscore are used internally and should not be modified
-
-func _ready():
-	if !Engine.is_editor_hint():
-		for f in range(0, 5):
-			var names = ["Primary", "Primary_R", "Secondary", "Secondary_R", "Span"]
-			var node = RayCast2D.new()
-			node.name = names[f]
-			node.hit_from_inside = true
-			add_child(node)
-		_update()
-
-func _var_floor(value):
-	if force_int:
-		return floor(value)
-	return value
-
-func _var_ceil(value):
-	if force_int:
-		return ceil(value)
-	return value#+1
-
-func _get_dir_vector(abs=false):
-	var vector = Vector2(1, 0) if direction == Dir.RIGHT \
-	else Vector2(0, 1) if direction == Dir.DOWN \
-	else Vector2(-1, 0) if direction == Dir.LEFT \
-	else Vector2(0, -1)
-	return vector if abs == false else Vector2(abs(vector.x), abs(vector.y))
-
-func _get_dist_offset(abs=false):
-	var sign = -1 if direction == Dir.LEFT or direction == Dir.UP else 1
-	sign = 1 if abs == true else sign
-	if sign == 1:
-		return wrapf(_var_floor(global_position.x), 0, 16)+1 if axis == Axis.X else wrapf(_var_floor(global_position.y), 0, 16)+1
+func get_solidity():
+	var solidity = get_metadata("Solidity")
+	if solidity == 1 and direction != Dir.DOWN:
+		_ignore_collision = true
+	elif solidity == 2:# and direction == Dir.DOWN:
+		_ignore_collision = true
 	else:
-		return 16-wrapf(_var_floor(global_position.x), 0, 16) if axis == Axis.X else 16-wrapf(_var_floor(global_position.y), 0, 16)
-	#var _var_floor_ceil = func _var_floor_ceil(value, sign):
-	#	return _var_floor(value) if sign == 1 else _var_ceil(value)
-	#var sign = -1 if direction == Dir.LEFT or direction == Dir.UP else 1
-	#sign = 1 if abs == true else sign
-	#var pad = -1 if sign == -1 else 0
-	#return wrapf(_var_floor_ceil.call(global_position.x*sign, sign), 0, 16)+pad+1 if axis == Axis.X else wrapf(_var_floor_ceil.call(global_position.y*sign, sign), 0, 16)+pad+1
+		_ignore_collision = false
 
-func _get_dist(sensor):
-	if sensor.is_colliding():
-		return _var_floor((sensor.get_collision_point().x - sensor.global_position.x) * sign(sensor.target_position.x)) if axis == Axis.X \
-		else _var_floor((sensor.get_collision_point().y - sensor.global_position.y) * sign(sensor.target_position.y))
-	else:
-		return 16
+func get_metadata(string:String):
+	var ray = $Ray
+	var collider = ray.get_collider()
+	if collider is TileMap:
+		var map_position = collider.local_to_map(ray.get_collision_point())
+		var tile_data = collider.get_cell_tile_data(0, map_position)
+		if tile_data is TileData:
+			var data = tile_data.get_custom_data(string)
+			return data
 
-func _check_solidity():
-	if _get_dist($Primary) == 16 or _get_dist($Primary_R) == 16:
-		return Solidity.EMPTY
-	elif _get_dist($Primary) == 0 and _get_dist($Primary_R) == 0 and ($Primary.is_colliding() or $Primary_R.is_colliding()):
-		return Solidity.FULL
-	else:
-		return Solidity.PARTIAL
+#----- Update Functions -----
 
-func _switch_mode():
-	mode = Mode.EXTENSION if _check_solidity() == Solidity.EMPTY \
-	else Mode.REGRESSION if _check_solidity() == Solidity.FULL \
-	else Mode.NORMAL
+func _compensation():
+	var vectors = [
+		Vector2(1, 0.5),
+		Vector2(0.5, 1),
+		Vector2(0, 0.5),
+		Vector2(0.5, 0)
+	]
+	return vectors[direction]
 
 func _update():
-	if !is_node_ready():
-		await ready
-	var ext = func ext():
-		var tmp = 0 if mode == Mode.NORMAL else 16 if mode == Mode.EXTENSION else -16
-		return -tmp if direction == Dir.LEFT or direction == Dir.UP else tmp
-	var shift : int = 16 if direction == Dir.LEFT or direction == Dir.UP else 0
-	var global_pos = \
-		Vector2(floor(global_position.x/16)*16+shift, floor(global_position.y)+0.5) if axis == Axis.X \
-		else Vector2(floor(global_position.x)+0.5, floor(global_position.y/16)*16+shift)
-	var global_pos_secondary = \
-		Vector2(floor(global_position.x/16)*16+shift+ext.call(), floor(global_position.y)+0.5) if axis == Axis.X \
-		else Vector2(floor(global_position.x)+0.5, floor(global_position.y/16)*16+shift+ext.call())
-	$Primary.global_position = global_pos
-	$Primary.target_position = _get_dir_vector() * 16
-	$Primary.force_raycast_update()
-	$Primary_R.position = $Primary.position + $Primary.target_position
-	$Primary_R.target_position = -$Primary.target_position
-	$Primary_R.force_raycast_update()
-	_switch_mode()
-	$Secondary.global_position = global_pos_secondary
-	$Secondary.target_position = _get_dir_vector() * 16
-	$Secondary.force_raycast_update()
-	$Secondary_R.position = $Secondary.position + $Secondary.target_position
-	$Secondary_R.target_position = -$Secondary.target_position
-	$Secondary_R.force_raycast_update()
-	$Span.position = $Secondary.position if mode == Mode.REGRESSION else $Primary.position
-	$Span.target_position = 16*_get_dir_vector() if mode == Mode.NORMAL else 32*_get_dir_vector()
-	$Span.force_raycast_update()
+	if Engine.is_editor_hint():
+		return
+	var ray = $Ray
+	var offset = 16
+	
+	ray.enabled = enabled
+	
+	#Position and Extension
+	ray.force_raycast_update()
+	var global_positions = [
+		Vector2(global_position.x-offset-(16*int(mode==Mode.REGRESSION)), global_position.y+0.5),
+		Vector2(global_position.x+0.5, global_position.y-offset-(16*int(mode==Mode.REGRESSION))),
+		Vector2(global_position.x+offset+(16*int(mode==Mode.REGRESSION)), global_position.y+0.5),
+		Vector2(global_position.x+0.5, global_position.y+offset+(16*int(mode==Mode.REGRESSION)))
+	]
+	var target_positions = [
+		Vector2(16+(16*int(mode!=Mode.NORMAL)), 0),
+		Vector2(0, 16+(16*int(mode!=Mode.NORMAL))),
+		Vector2(-16-(16*int(mode!=Mode.NORMAL)), 0),
+		Vector2(0, -16-(16*int(mode!=Mode.NORMAL)))
+	]
+	ray.global_position = global_positions[direction]
+	ray.target_position = target_positions[direction]
+
+#----- Core Functions -----
+
+func _ready():
+	if not Engine.is_editor_hint() or get_tree().debug_collisions_hint:
+		var raycast = RayCast2D.new()
+		raycast.collision_mask = collision_mask
+		raycast.hit_from_inside = true
+		raycast.enabled = enabled
+		raycast.name = "Ray"
+		add_child(raycast)
 
 func _draw():
 	if Engine.is_editor_hint():
@@ -161,5 +152,4 @@ func _draw():
 func _process(delta):
 	if Engine.is_editor_hint():
 		queue_redraw()
-	else:
-		_update()
+		#_update()

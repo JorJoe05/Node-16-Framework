@@ -5,9 +5,18 @@ class_name PlayerCollider
 enum Dir {RIGHT, DOWN, LEFT, UP}
 enum Axis {X, Y}
 
-@export var width_radius : int = 9 #7
-@export var height_radius : int = 19 #14
-@export var push_radius : int = 10 #10
+@export var width_radius : int = 9 : #7
+	set(value):
+		width_radius = max(value, 0)
+		_position_sensors()
+@export var height_radius : int = 19 : #14
+	set(value):
+		height_radius = max(value, 0)
+		_position_sensors()
+@export var push_radius : int = 10 : #10
+	set(value):
+		push_radius = max(value, 0)
+		_position_sensors()
 @export_enum("Right", "Down", "Left", "Up") var direction : int = Dir.DOWN:
 	set(value):
 		direction = value
@@ -19,7 +28,7 @@ var sensors = []
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	if !Engine.is_editor_hint():
+	if true:#!Engine.is_editor_hint():
 		for f in range(0, 6):
 			var sensor = NewTileCheck.new()
 			sensor.collision_mask = collision_mask
@@ -160,7 +169,7 @@ func get_dist_vector_right_wall():
 	return $Sensor_F.get_distance_vector()
 
 func _draw():
-	if true:#Engine.is_editor_hint():
+	if Engine.is_editor_hint() or get_tree().debug_collisions_hint:
 		var shift = 8 if shift_sides else 0
 		var points = [
 				Vector2(-width_radius, -0.5).rotated(direction*PI/2-PI/2)+Vector2(0.5, 0.5), Vector2(-width_radius, height_radius+0.5).rotated(direction*PI/2-PI/2)+Vector2(0.5, 0.5),
@@ -171,12 +180,12 @@ func _draw():
 				Vector2(-0.5, shift).rotated(direction*PI/2-PI/2)+Vector2(0.5, 0.5), Vector2(push_radius+0.5, shift).rotated(direction*PI/2-PI/2)+Vector2(0.5, 0.5)
 			]
 		var offset = -Vector2(wrapf(global_position.x, 0, 1), wrapf(global_position.y, 0, 1))
-		draw_line(points[0], points[1], Color.GREEN, 1) if sensors[0].enabled else 0
-		draw_line(points[2], points[3], Color.CYAN, 1) if sensors[1].enabled else 0
-		draw_line(points[4], points[5], Color.DODGER_BLUE, 1) if sensors[2].enabled else 0
-		draw_line(points[6], points[7], Color.YELLOW, 1) if sensors[3].enabled else 0
-		draw_line(points[8], points[9], Color.MAGENTA, 1) if sensors[4].enabled else 0
-		draw_line(points[10], points[11], Color.RED, 1) if sensors[5].enabled else 0
+		draw_line(points[0], points[1], Color.GREEN, 1)
+		draw_line(points[2], points[3], Color.CYAN, 1)
+		draw_line(points[4], points[5], Color.DODGER_BLUE, 1)
+		draw_line(points[6], points[7], Color.YELLOW, 1)
+		draw_line(points[8], points[9], Color.MAGENTA, 1)
+		draw_line(points[10], points[11], Color.RED, 1)
 		for f in [Vector2.ZERO, Vector2.UP, Vector2.DOWN, Vector2.LEFT, Vector2.RIGHT]:
 			var col = Color.BLACK if f == Vector2.ZERO else Color.WHITE
 			draw_rect(Rect2(f, Vector2(1, 1)), col)

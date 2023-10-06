@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://dfu7xkakubnq2"]
+[gd_scene load_steps=8 format=3 uid="uid://dfu7xkakubnq2"]
 
 [ext_resource type="Script" path="res://-Framework-/Base Assets/Nodes/Player/Player.gd" id="1_373e6"]
 [ext_resource type="Script" path="res://-Framework-/Core/State Machine/StateMachine.gd" id="2_h8k2s"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://-Framework-/Base Assets/Nodes/Player/States/Rolling.gd" id="4_asl3u"]
 [ext_resource type="Script" path="res://-Framework-/Base Assets/Nodes/Player/States/Airborne.gd" id="5_df2xg"]
 [ext_resource type="Script" path="res://-Framework-/Core/Custom Nodes/Collision/Tile Colliders/PlayerCollider/PlayerCollider.gd" id="6_igd6v"]
+[ext_resource type="Texture2D" uid="uid://bowelu21kfovr" path="res://icon.svg" id="6_mcwsf"]
 
 [node name="Player" type="Node2D"]
 script = ExtResource("1_373e6")
@@ -22,6 +23,11 @@ script = ExtResource("4_asl3u")
 
 [node name="Airborne" type="Node" parent="StateMachine"]
 script = ExtResource("5_df2xg")
+
+[node name="Icon" type="Sprite2D" parent="."]
+position = Vector2(0.5, 0.500001)
+scale = Vector2(0.164062, 0.304688)
+texture = ExtResource("6_mcwsf")
 
 [node name="PlayerCollider" type="Node2D" parent="."]
 script = ExtResource("6_igd6v")
