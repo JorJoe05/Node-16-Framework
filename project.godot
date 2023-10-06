@@ -14,14 +14,14 @@ config/name="Node-16 Framework"
 config/tags=PackedStringArray("fanmade", "sonic", "framework")
 run/main_scene="res://node_2d.tscn"
 config/features=PackedStringArray("4.1", "GL Compatibility")
-boot_splash/image="res://Branding/Icons/Universal/icon.png"
+boot_splash/image="res://-Framework-/Branding/Icons/Universal/icon.png"
 boot_splash/fullsize=false
-config/icon="res://Branding/Icons/Universal/icon.svg"
+config/icon="res://-Framework-/Branding/Icons/Universal/icon.svg"
 
 [autoload]
 
-RMath="*res://core/Autoloads/RMath.gd"
-GlobalCamera="*res://Nodes/Camera/GlobalCamera.tscn"
+RMath="*res://-Framework-/Core/Autoloads/RMath.gd"
+GlobalCamera="*res://-Framework-/Base Assets/Nodes/Camera/GlobalCamera.tscn"
 
 [display]
 
@@ -29,7 +29,8 @@ window/size/viewport_width=320
 window/size/viewport_height=224
 window/size/window_width_override=640
 window/size/window_height_override=448
-window/stretch/mode="viewport"
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
 window/vsync/vsync_mode=0
 
 [editor]
@@ -40,7 +41,12 @@ naming/scene_name_casing=1
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/BitmapTileCollision/plugin.cfg", "res://addons/Node-16 Framework/plugin.cfg")
+enabled=PackedStringArray("res://addons/Node-16 Framework/plugin.cfg")
+
+[gui]
+
+common/snap/snap_2d_transforms_to_pixel=true
+common/snap/snap_2d_vertices_to_pixel=true
 
 [input]
 

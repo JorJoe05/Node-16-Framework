@@ -1,0 +1,27 @@
+[gd_scene load_steps=7 format=3 uid="uid://dfu7xkakubnq2"]
+
+[ext_resource type="Script" path="res://-Framework-/Base Assets/Nodes/Player/Player.gd" id="1_373e6"]
+[ext_resource type="Script" path="res://-Framework-/Core/State Machine/StateMachine.gd" id="2_h8k2s"]
+[ext_resource type="Script" path="res://-Framework-/Base Assets/Nodes/Player/States/Normal.gd" id="3_6gt66"]
+[ext_resource type="Script" path="res://-Framework-/Base Assets/Nodes/Player/States/Rolling.gd" id="4_asl3u"]
+[ext_resource type="Script" path="res://-Framework-/Base Assets/Nodes/Player/States/Airborne.gd" id="5_df2xg"]
+[ext_resource type="Script" path="res://-Framework-/Core/Custom Nodes/Collision/Tile Colliders/PlayerCollider/PlayerCollider.gd" id="6_igd6v"]
+
+[node name="Player" type="Node2D"]
+script = ExtResource("1_373e6")
+
+[node name="StateMachine" type="Node" parent="."]
+script = ExtResource("2_h8k2s")
+initial_state = NodePath("Normal")
+
+[node name="Normal" type="Node" parent="StateMachine"]
+script = ExtResource("3_6gt66")
+
+[node name="Rolling" type="Node" parent="StateMachine"]
+script = ExtResource("4_asl3u")
+
+[node name="Airborne" type="Node" parent="StateMachine"]
+script = ExtResource("5_df2xg")
+
+[node name="PlayerCollider" type="Node2D" parent="."]
+script = ExtResource("6_igd6v")

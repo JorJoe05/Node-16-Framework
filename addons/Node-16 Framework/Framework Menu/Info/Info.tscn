@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://cdjgxocf45qfx"]
 
-[ext_resource type="Texture2D" uid="uid://dnmv8sjoj8noo" path="res://Branding/Icons/Universal/icon_small.svg" id="1_owed2"]
-[ext_resource type="Texture2D" uid="uid://8va2be6ojxvw" path="res://Branding/Logo_White.svg" id="2_ki3rg"]
+[ext_resource type="Texture2D" uid="uid://dnmv8sjoj8noo" path="res://-Framework-/Branding/Icons/Universal/icon_small.svg" id="1_owed2"]
+[ext_resource type="Texture2D" uid="uid://8va2be6ojxvw" path="res://-Framework-/Branding/Logo_White.svg" id="2_ki3rg"]
 [ext_resource type="PackedScene" uid="uid://bbrkpf6lypgft" path="res://addons/Node-16 Framework/Framework Menu/Info/Applets/Commit History/CommitHistory.tscn" id="3_owrgo"]
 [ext_resource type="PackedScene" uid="uid://dndouo4etayw3" path="res://addons/Node-16 Framework/Framework Menu/Info/Applets/FilePreview/FilePreview.tscn" id="3_u2jlf"]
 

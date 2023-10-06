@@ -1,7 +1,7 @@
 [gd_scene load_steps=16 format=3 uid="uid://dhyinoombcc7o"]
 
 [ext_resource type="Texture2D" uid="uid://bowelu21kfovr" path="res://icon.svg" id="1_h22so"]
-[ext_resource type="PackedScene" uid="uid://dfu7xkakubnq2" path="res://Nodes/Player/player.tscn" id="2_0o38p"]
+[ext_resource type="PackedScene" uid="uid://dfu7xkakubnq2" path="res://-Framework-/Base Assets/Nodes/Player/player.tscn" id="3_iafwx"]
 [ext_resource type="Texture2D" uid="uid://cua45r7ob2c6f" path="res://icon.png" id="3_ixt30"]
 
 [sub_resource type="TileMapPattern" id="TileMapPattern_s02rq"]
@@ -12,72 +12,25 @@ tile_data = PackedInt32Array(262144, 65536, 1, 1, 65536, 1, 65537, 65536, 1, 196
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_wshdq"]
 texture = ExtResource("1_h22so")
-0:0/0 = 0
-1:0/0 = 0
-2:0/0 = 0
-3:0/0 = 0
-4:0/0 = 0
-5:0/0 = 0
-6:0/0 = 0
-7:0/0 = 0
-0:1/0 = 0
-1:1/0 = 0
-2:1/0 = 0
-3:1/0 = 0
-4:1/0 = 0
-5:1/0 = 0
-6:1/0 = 0
-7:1/0 = 0
-0:2/0 = 0
-1:2/0 = 0
 2:2/0 = 0
-3:2/0 = 0
-4:2/0 = 0
-5:2/0 = 0
+2:2/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+2:2/0/physics_layer_0/angular_velocity = 0.0
+2:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+3:1/0 = 0
+3:1/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+3:1/0/physics_layer_0/angular_velocity = 0.0
+3:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+3:1/0/custom_data_0 = 1
 6:2/0 = 0
-7:2/0 = 0
-0:3/0 = 0
-1:3/0 = 0
-2:3/0 = 0
-3:3/0 = 0
-4:3/0 = 0
-5:3/0 = 0
-6:3/0 = 0
-7:3/0 = 0
-0:4/0 = 0
-1:4/0 = 0
-2:4/0 = 0
-3:4/0 = 0
-4:4/0 = 0
-5:4/0 = 0
-6:4/0 = 0
-7:4/0 = 0
-0:5/0 = 0
-1:5/0 = 0
-2:5/0 = 0
-3:5/0 = 0
-4:5/0 = 0
-5:5/0 = 0
-6:5/0 = 0
-7:5/0 = 0
-0:6/0 = 0
-1:6/0 = 0
-2:6/0 = 0
-3:6/0 = 0
-4:6/0 = 0
-5:6/0 = 0
-6:6/0 = 0
-7:6/0 = 0
-0:7/0 = 0
-1:7/0 = 0
-2:7/0 = 0
-3:7/0 = 0
-4:7/0 = 0
-5:7/0 = 0
-6:7/0 = 0
-7:7/0 = 0
+6:2/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+6:2/0/physics_layer_0/angular_velocity = 0.0
+6:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+6:2/0/custom_data_0 = 2
 
 [sub_resource type="TileSet" id="TileSet_5w2v8"]
+physics_layer_0/collision_layer = 1
+custom_data_layer_0/name = "Solidity"
+custom_data_layer_0/type = 2
 sources/0 = SubResource("TileSetAtlasSource_wshdq")
 pattern_0 = SubResource("TileMapPattern_s02rq")
 pattern_1 = SubResource("TileMapPattern_8wr5m")
@@ -134,9 +87,13 @@ size = Vector2(64, 64)
 
 [node name="Node2D" type="Node2D"]
 
+[node name="Player" parent="." instance=ExtResource("3_iafwx")]
+position = Vector2(96, -64)
+
 [node name="TileMap" type="TileMap" parent="."]
 tile_set = SubResource("TileSet_5w2v8")
 format = 2
+layer_0/tile_data = PackedInt32Array(-393207, 131072, 2, -327671, 131072, 2, -393206, 131072, 2, -327670, 131072, 2, -393203, 196608, 1, -327667, 196608, 1, -393202, 196608, 1, -327666, 196608, 1, -393199, 393216, 2, -327663, 393216, 2, -393198, 393216, 2, -327662, 393216, 2)
 metadata/test = SubResource("TileMapPattern_rmlwp")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
@@ -167,7 +124,7 @@ scale = Vector2(3.0625, 0.125)
 texture = ExtResource("1_h22so")
 
 [node name="StaticBody2D4" type="StaticBody2D" parent="."]
-position = Vector2(2176, -216)
+position = Vector2(368, -80)
 scale = Vector2(0.0799988, 9)
 metadata/_edit_group_ = true
 
@@ -282,9 +239,6 @@ shape = SubResource("RectangleShape2D_8081u")
 position = Vector2(188, 6)
 scale = Vector2(3.0625, 0.125)
 texture = ExtResource("1_h22so")
-
-[node name="Player" parent="." instance=ExtResource("2_0o38p")]
-position = Vector2(236, -28)
 
 [node name="Node2D" type="Node2D" parent="."]
 position = Vector2(1330, -80)
@@ -816,6 +770,8 @@ scroll_base_scale = Vector2(0.5, 0.5)
 [node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
 modulate = Color(0.196078, 0.196078, 0.196078, 1)
 motion_mirroring = Vector2(384, 256)
+metadata/_edit_lock_ = true
+metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer"]
 texture = ExtResource("3_ixt30")
