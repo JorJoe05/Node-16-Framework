@@ -17,18 +17,44 @@ enum Axis {X, Y}
 	set(value):
 		push_radius = max(value, 0)
 		_position_sensors()
-@export_enum("Right", "Down", "Left", "Up") var direction : int = Dir.DOWN:
+@export_enum("Right", "Down", "Left", "Up") var direction : int = Dir.DOWN :
 	set(value):
 		direction = value
 		_position_sensors()
-@export_flags_2d_physics var collision_mask = 1
+@export_flags_2d_physics var collision_mask = 1 :
+	set(value):
+		collision_mask = value
+		_sync_properties()
+
+@export_group("Automatic Handling")
+
+@export var player_node : Entity
+@export var handle_sensor_activation := true
+@export var handle_sensor_extension := true
+@export var handle_ground_state := true
+
+@export_group("Collider Activation")
+
+@export var on_ground := false
+@export var extension := Vector2.ZERO
+
+@export_subgroup("Individual Colliders")
+
+@export var left_floor_enabled := true
+@export var right_floor_enabled := true
+@export var left_ceiling_enabled := true
+@export var right_ceiling_enabled := true
+@export var left_wall_enabled := true
+@export var right_wall_enabled := true
+
+
 var shift_sides = false
 
 var sensors = []
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	if true:#!Engine.is_editor_hint():
+	if !Engine.is_editor_hint():
 		for f in range(0, 6):
 			var sensor = NewTileCheck.new()
 			sensor.collision_mask = collision_mask
@@ -37,6 +63,10 @@ func _ready():
 			add_child(sensor)
 			sensors.append(get_node("Sensor_" + suffixes[f]))
 		_position_sensors()
+
+func _sync_properties():
+	for f in sensors:
+		f.collision_mask = collision_mask
 
 func _position_sensors():
 	var shift = 8 if shift_sides == true else 0
@@ -53,7 +83,7 @@ func _position_sensors():
 	queue_redraw()
 
 func _mostly_moving() -> int:
-	var rad = atan2(owner.velocity.y, owner.velocity.x)
+	var rad = atan2(player_node.velocity.y, player_node.velocity.x)
 	return wrapi(round(rad/(PI/2)), 0, 4)
 	# 0=Right 1=Down 2=Left 3=Up
 

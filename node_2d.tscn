@@ -123,6 +123,37 @@ position = Vector2(188, 6)
 scale = Vector2(3.0625, 0.125)
 texture = ExtResource("1_h22so")
 
+[node name="StaticBody2D2_2" type="StaticBody2D" parent="."]
+position = Vector2(64, 168)
+collision_layer = 3
+collision_mask = 3
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D2_2"]
+position = Vector2(188, 6)
+shape = SubResource("RectangleShape2D_8081u")
+
+[node name="Icon" type="Sprite2D" parent="StaticBody2D2_2"]
+position = Vector2(188, 6)
+scale = Vector2(3.0625, 0.125)
+texture = ExtResource("1_h22so")
+
+[node name="StaticBody2D2_3" type="StaticBody2D" parent="."]
+position = Vector2(440, 16)
+rotation = 1.5708
+collision_layer = 3
+collision_mask = 3
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D2_3"]
+position = Vector2(188, 6)
+shape = SubResource("RectangleShape2D_8081u")
+
+[node name="Icon" type="Sprite2D" parent="StaticBody2D2_3"]
+position = Vector2(188, 6)
+scale = Vector2(3.0625, 0.125)
+texture = ExtResource("1_h22so")
+
 [node name="StaticBody2D4" type="StaticBody2D" parent="."]
 position = Vector2(368, -80)
 scale = Vector2(0.0799988, 9)

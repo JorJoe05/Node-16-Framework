@@ -1,4 +1,5 @@
 extends Entity
+class_name Player
 
 enum Dir {RIGHT, DOWN, LEFT, UP}
 enum Mode {FLOOR, RIGHTWALL, CEILING, LEFTWALL}
@@ -221,3 +222,5 @@ func _physics_process(delta):
 	#print(mostly_moving())
 	#print(RMath.ANGLELIST.size())
 	#position += velocity
+	if Input.is_action_just_pressed("c"):
+		$PlayerCollider.collision_mask = 2
