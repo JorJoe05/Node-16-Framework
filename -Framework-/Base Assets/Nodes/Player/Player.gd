@@ -222,5 +222,3 @@ func _physics_process(delta):
 	#print(mostly_moving())
 	#print(RMath.ANGLELIST.size())
 	#position += velocity
-	if Input.is_action_just_pressed("c"):
-		$PlayerCollider.collision_mask = 2
